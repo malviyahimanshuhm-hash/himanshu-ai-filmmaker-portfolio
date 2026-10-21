@@ -44,7 +44,7 @@ export function HomePage() {
   return (
     <>
       <Navigation />
-      <AudioControls />
+      <AudioControls isModalOpen={showModal} />
       <main id="main-content">
         <Hero onWatchShowreel={handleWatchShowreel} />
         <Showreel onProjectSelect={handleProjectSelect} />

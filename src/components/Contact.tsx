@@ -74,7 +74,7 @@ export const Contact = () => {
                 </div>
                 <div className="channel-details">
                   <span className="channel-label">Base Location</span>
-                  <span className="channel-value">Mumbai, India • Available Globally</span>
+                  <span className="channel-value">Bhopal, India • Available Globally</span>
                 </div>
               </div>
             </div>

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useMemo, useState } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { gsap } from 'gsap';
@@ -7,8 +7,12 @@ import './Hero3D.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
+interface FilmmakerCharacterProps {
+  isEntered: boolean;
+}
+
 // Stylized Cinema Camera & Director Rig
-const FilmmakerCharacter = () => {
+const FilmmakerCharacter = ({ isEntered }: FilmmakerCharacterProps) => {
   const groupRef = useRef<THREE.Group>(null);
   const cameraRigRef = useRef<THREE.Group>(null);
   const recLightRef = useRef<THREE.PointLight>(null);
@@ -19,6 +23,32 @@ const FilmmakerCharacter = () => {
     return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   }, []);
 
+  // Entrance slide-in animation from the side
+  useEffect(() => {
+    const group = groupRef.current;
+    if (!group) return;
+
+    if (prefersReducedMotion) {
+      group.position.set(0, -0.3, 0);
+      group.rotation.set(0, 0, 0);
+      return;
+    }
+
+    if (isEntered) {
+      // Smooth slide into frame from the right side
+      gsap.fromTo(
+        group.position,
+        { x: 3.2, z: -0.5 },
+        { x: 0, z: 0, duration: 1.6, ease: 'power3.out' }
+      );
+      gsap.fromTo(
+        group.rotation,
+        { y: -0.7 },
+        { y: 0, duration: 1.6, ease: 'power3.out' }
+      );
+    }
+  }, [isEntered, prefersReducedMotion]);
+
   // Mouse move listener for subtle camera pan tracking
   useEffect(() => {
     if (prefersReducedMotion) return;
@@ -27,8 +57,8 @@ const FilmmakerCharacter = () => {
       const normX = (e.clientX / window.innerWidth) * 2 - 1;
       const normY = -(e.clientY / window.innerHeight) * 2 + 1;
       targetRotation.current = {
-        x: normY * 0.15,
-        y: normX * 0.25,
+        x: normY * 0.12,
+        y: normX * 0.22,
       };
     };
 
@@ -36,15 +66,18 @@ const FilmmakerCharacter = () => {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, [prefersReducedMotion]);
 
-  // GSAP scroll trigger for parallax & cinematic rotation
+  // GSAP scroll trigger for parallax & upward exit transition
   useEffect(() => {
     const group = groupRef.current;
     if (!group || prefersReducedMotion) return;
 
     const ctx = gsap.context(() => {
-      gsap.to(group.rotation, {
-        y: -0.4,
-        ease: 'none',
+      // Smooth scroll reaction - avatar moves upward and exits hero composition naturally
+      gsap.to(group.position, {
+        y: 1.8,
+        z: -1.2,
+        x: 0.6,
+        ease: 'power1.inOut',
         scrollTrigger: {
           trigger: '#hero',
           start: 'top top',
@@ -53,9 +86,9 @@ const FilmmakerCharacter = () => {
         },
       });
 
-      gsap.to(group.position, {
-        y: -0.4,
-        x: 0.2,
+      gsap.to(group.rotation, {
+        y: -0.5,
+        x: 0.1,
         ease: 'none',
         scrollTrigger: {
           trigger: '#hero',
@@ -70,8 +103,8 @@ const FilmmakerCharacter = () => {
   }, [prefersReducedMotion]);
 
   // Frame animation: smooth mouse tracking lerp & pulsing REC light
-  useFrame((state, delta) => {
-    if (groupRef.current && !prefersReducedMotion) {
+  useFrame((state) => {
+    if (groupRef.current && !prefersReducedMotion && isEntered) {
       // Smooth lerp to mouse position
       groupRef.current.rotation.y = THREE.MathUtils.lerp(
         groupRef.current.rotation.y,
@@ -86,7 +119,7 @@ const FilmmakerCharacter = () => {
 
       // Subtle breathing idle float
       const t = state.clock.getElapsedTime();
-      groupRef.current.position.y = Math.sin(t * 1.5) * 0.04;
+      groupRef.current.position.y = -0.3 + Math.sin(t * 1.5) * 0.03;
 
       // Pulse red REC indicator
       if (recLightRef.current) {
@@ -96,7 +129,7 @@ const FilmmakerCharacter = () => {
   });
 
   return (
-    <group ref={groupRef} position={[0, -0.15, 0]}>
+    <group ref={groupRef} position={[0, -0.3, 0]} scale={[0.88, 0.88, 0.88]}>
       {/* --- Stylized Director Figure --- */}
       <group position={[0, 0, 0]}>
         {/* Head with Director's Cap */}
@@ -104,8 +137,8 @@ const FilmmakerCharacter = () => {
           <sphereGeometry args={[0.3, 32, 32]} />
           <meshStandardMaterial
             color="#d4af37"
-            metalness={0.2}
-            roughness={0.6}
+            metalness={0.25}
+            roughness={0.55}
           />
         </mesh>
 
@@ -248,66 +281,16 @@ const FilmmakerCharacter = () => {
   );
 };
 
-export const Hero3D = () => {
-  const canvasRef = useRef<HTMLDivElement>(null);
+interface Hero3DProps {
+  isEntered?: boolean;
+}
 
-  // Trigger name reveal animation when component mounts
-  useEffect(() => {
-    const timeline = gsap.timeline();
-    
-    // Character entrance animation coordinated with 3D
-    timeline.fromTo(
-      '.filmmaker-character-rig',
-      { opacity: 0, x: -30 },
-      { opacity: 1, x: 0, duration: 1.2, ease: 'power2.out' },
-      0
-    );
-
-    // Staggered name reveal with character sync
-    timeline.fromTo(
-      '.hero-title-word',
-      { opacity: 0, y: 30, scaleX: 0.9 },
-      { opacity: 1, y: 0, scaleX: 1, duration: 0.8, ease: 'back.out(1.2)', stagger: 0.15 },
-      0.4
-    );
-
-    // Subtitle and tagline follow
-    timeline.fromTo(
-      '.hero-subtitle',
-      { opacity: 0, y: 20 },
-      { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' },
-      0.8
-    );
-
-    timeline.fromTo(
-      '.hero-tagline',
-      { opacity: 0, y: 20 },
-      { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' },
-      1.0
-    );
-
-    // Fade in description
-    timeline.fromTo(
-      '.hero-description',
-      { opacity: 0, y: 15 },
-      { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' },
-      1.2
-    );
-
-    // Buttons entrance
-    timeline.fromTo(
-      '.hero-cta',
-      { opacity: 0, y: 20 },
-      { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' },
-      1.4
-    );
-  }, []);
-
+export const Hero3D = ({ isEntered = true }: Hero3DProps) => {
   return (
-    <div className="hero-3d-wrapper" aria-hidden="true" ref={canvasRef}>
+    <div className="hero-3d-wrapper" aria-hidden="true">
       <Canvas
         className="hero-3d-canvas"
-        camera={{ position: [0, 0.6, 3.2], fov: 38 }}
+        camera={{ position: [0, 0.75, 3.6], fov: 36 }}
         gl={{
           antialias: true,
           alpha: true,
@@ -318,16 +301,16 @@ export const Hero3D = () => {
           gl.shadowMap.enabled = true;
           gl.shadowMap.type = THREE.PCFSoftShadowMap;
           gl.toneMapping = THREE.ACESFilmicToneMapping;
-          gl.toneMappingExposure = 1.1;
+          gl.toneMappingExposure = 1.15;
         }}
       >
         {/* Procedural Cinematic Studio Lighting — Zero external CDN network dependencies */}
-        <ambientLight intensity={1.0} color="#1a1f2e" />
+        <ambientLight intensity={1.1} color="#181d2c" />
 
         {/* Warm Golden Key Light */}
         <directionalLight
-          position={[3.5, 4, 3]}
-          intensity={3.5}
+          position={[3.5, 4.2, 3]}
+          intensity={3.6}
           color="#f4c430"
           castShadow
           shadow-mapSize-width={1024}
@@ -357,7 +340,7 @@ export const Hero3D = () => {
           distance={6}
         />
 
-        <FilmmakerCharacter />
+        <FilmmakerCharacter isEntered={isEntered} />
       </Canvas>
     </div>
   );

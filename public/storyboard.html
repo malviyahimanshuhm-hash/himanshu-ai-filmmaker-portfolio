@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Himanshu Malviya | AI Filmmaker Portfolio — Storyboard (9 Panels)</title>
+    <style>
+        :root {
+            --bg: #0a0a0c;
+            --card-bg: #141418;
+            --gold: #d4af37;
+            --gold-muted: rgba(212, 175, 55, 0.2);
+            --text: #f0f0f2;
+            --text-muted: #a0a0ab;
+            --border: #2a2a32;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background: var(--bg); color: var(--text); padding: 40px 20px; line-height: 1.6; }
+        .container { max-width: 1400px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 50px; }
+        header h1 { font-size: 2.5rem; color: var(--gold); letter-spacing: 2px; margin-bottom: 10px; text-transform: uppercase; }
+        header p { color: var(--text-muted); font-size: 1.1rem; }
+        
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        @media(max-width: 1024px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+        @media(max-width: 640px) { .grid { grid-template-columns: 1fr; } }
+        
+        .panel { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.3s, border-color 0.3s; }
+        .panel:hover { transform: translateY(-4px); border-color: var(--gold); }
+        
+        .panel-header { background: #1a1a22; padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .panel-number { background: var(--gold); color: var(--bg); font-weight: 700; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
+        .panel-title { font-size: 1.1rem; font-weight: 600; color: var(--text); }
+        
+        .panel-body { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; gap: 14px; }
+        .mockup-frame { background: #050507; border: 1px dashed var(--border); border-radius: 8px; height: 160px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+        .mockup-frame img { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; }
+        .mockup-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(10,10,12,0.6); padding: 10px; text-align: center; }
+        .mockup-overlay span { color: var(--gold); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .detail-row { font-size: 0.9rem; color: var(--text-muted); }
+        .detail-row strong { color: var(--text); }
+        
+        .actions { margin-top: 40px; text-align: center; }
+        .btn { background: var(--gold); color: var(--bg); font-weight: 700; padding: 12px 28px; border-radius: 6px; border: none; cursor: pointer; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; transition: opacity 0.2s; }
+        .btn:hover { opacity: 0.9; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Cinematic Storyboard — 9 Panels</h1>
+            <p>Himanshu Malviya AI Filmmaker Portfolio Experience Flow</p>
+        </header>
+
+        <div class="grid">
+            <!-- Panel 1 -->
+            <div class="panel">
+                <div class="panel-header">
+                    <span class="panel-number">1</span>
+                    <span class="panel-title">Dark Ambience Intro</span>
+                </div>
+                <div class="panel-body">
+                    <div class="mockup-frame">
+                        <div class="mockup-overlay">
+                            <span>Panel 1</span>
+                            <small style="color:#aaa;">Vignette & Film Grain</small>
+                        </div>
+                    </div>
+                    <div class="detail-row"><strong>Visual:</strong> Deep obsidian background with subtle lighting gradient and organic film grain.</div>
+                    <div class="detail-row"><strong>Audio:</strong> Low cinematic drone + optional subtle ambient score toggle.</div>
+                </div>
+            </div>
+
+            <!-- Panel 2 -->
+            <div class="panel">
+                <div class="panel-header">
+                    <span class="panel-number">2</span>
+                    <span class="panel-title">3D Avatar Entrance</span>
+                </div>
+                <div class="panel-body">
+                    <div class="mockup-frame">
+                        <div class="mockup-overlay">
+                            <span>Panel 2</span>
+                            <small style="color:#aaa;">Rigged Director & Camera</small>
+                        </div>
+                    </div>
+                    <div class="detail-row"><strong>Visual:</strong> 3D AI filmmaker avatar slides smoothly into view from the left with golden key lighting.</div>
+                    <div class="detail-row"><strong>Interaction:</strong> Subtle mouse-tracking parallax response.</div>
+                </div>
+            </div>
+
+            <!-- Panel 3 -->
+            <div class="panel">
+                <div class="panel-header">
+                    <span class="panel-number">3</span>
+                    <span class="panel-title">Voice Sync & "Hey, Marshall"</span>
+                </div>
+                <div class="panel-body">
+                    <div class="mockup-frame">
+                        <div class="mockup-overlay">
+                            <span>Panel 3</span>
+                            <small style="color:#aaa;">Audio Accent & Subtitle</small>
+                        </div>
+                    </div>
+                    <div class="detail-row"><strong>Visual:</strong> Red REC tally light pulses on the camera rig; cinematic sound accent fires.</div>
+                    <div class="detail-row"><strong>Text:</strong> "Hey, Marshall" subtitle prompt appears gently below.</div>
+                </div>
+            </div>
+
+            <!-- Panel 4 -->
+            <div class="panel">
+                <div class="panel-header">
+                    <span class="panel-number">4</span>
+                    <span class="panel-title">Typography Reveal</span>
+                </div>
+                <div class="panel-body">
+                    <div class="mockup-frame">
+                        <div class="mockup-overlay">
+                            <span>Panel 4</span>
+                            <small style="color:#aaa;">HIMANSHU MALVIYA</small>
+                        </div>
+                    </div>
+                    <div class="detail-row"><strong>Visual:</strong> Avatar glides to the side; name reveals with staggered gold lettermask animation.</div>
+                    <div class="detail-row"><strong>Tagline:</strong> "Building the Future of Indian Cinema with AI."</div>
+                </div>
+            </div>
+
+            <!-- Panel 5 -->
+            <div class="panel">
+                <div class="panel-header">
+                    <span class="panel-number">5</span>
+                    <span class="panel-title">Scroll-Driven Vortex</span>
+                </div>
+                <div class="panel-body">
+                    <div class="mockup-frame">
+                        <div class="mockup-overlay">
+                            <span>Panel 5</span>
+                            <small style="color:#aaa;">GSAP ScrollTrigger</small>
+                        </div>
+                    </div>
+                    <div class="detail-row"><strong>Visual:</strong> As user scrolls down, project clips swirl in a controlled vortex motion.</div>
+                    <div class="detail-row"><strong>Transition:</strong> Smoothly settles into the structured 3-column grid.</div>
+                </div>
+            </div>
+
+            <!-- Panel 6 -->
+            <div class="panel">
+                <div class="panel-header">
+                    <span class="panel-number">6</span>
+                    <span class="panel-title">Interactive Work Gallery</span>
+                </div>
+                <div class="panel-body">
+                    <div class="mockup-frame">
+                        <div class="mockup-overlay">
+                            <span>Panel 6</span>
+                            <small style="color:#aaa;">8 Source Videos Grid</small>
+                        </div>
+                    </div>
+                    <div class="detail-row"><strong>Visual:</strong> Filterable grid (AI Films, Microdramas, Commercials) with poster thumbnails.</div>
+                    <div class="detail-row"><strong>Hover:</strong> Auto-previews muted teaser clip; click opens immersive modal.</div>
+                </div>
+            </div>
+
+            <!-- Panel 7 -->
+            <div class="panel">
+                <div class="panel-header">
+                    <span class="panel-number">7</span>
+                    <span class="panel-title">Video Modal & Playback</span>
+                </div>
+                <div class="panel-body">
+                    <div class="mockup-frame">
+                        <div class="mockup-overlay">
+                            <span>Panel 7</span>
+                            <small style="color:#aaa;">Full Film Player</small>
+                        </div>
+                    </div>
+                    <div class="detail-row"><strong>Visual:</strong> Full-screen cinematic backdrop blur with active video player.</div>
+                    <div class="detail-row"><strong>Controls:</strong> Play/pause, volume slider, fullscreen, metadata, and tools list.</div>
+                </div>
+            </div>
+
+            <!-- Panel 8 -->
+            <div class="panel">
+                <div class="panel-header">
+                    <span class="panel-number">8</span>
+                    <span class="panel-title">About & Bhopal Portrait</span>
+                </div>
+                <div class="panel-body">
+                    <div class="mockup-frame">
+                        <img src="/images/about-portrait.jpg" alt="Himanshu Malviya Portrait" onerror="this.style.display='none'">
+                        <div class="mockup-overlay" style="background:rgba(10,10,12,0.4)">
+                            <span>Panel 8</span>
+                            <small style="color:var(--gold);">Bhopal, India</small>
+                        </div>
+                    </div>
+                    <div class="detail-row"><strong>Visual:</strong> High-resolution artist portrait with gold framing and background bio.</div>
+                    <div class="detail-row"><strong>Location:</strong> "Bhopal, India • Available Globally".</div>
+                </div>
+            </div>
+
+            <!-- Panel 9 -->
+            <div class="panel">
+                <div class="panel-header">
+                    <span class="panel-number">9</span>
+                    <span class="panel-title">Contact & Global Reach</span>
+                </div>
+                <div class="panel-body">
+                    <div class="mockup-frame">
+                        <div class="mockup-overlay">
+                            <span>Panel 9</span>
+                            <small style="color:#aaa;">Secure Form & Socials</small>
+                        </div>
+                    </div>
+                    <div class="detail-row"><strong>Visual:</strong> Dark gold-accented contact form and direct booking channels.</div>
+                    <div class="detail-row"><strong>Status:</strong> Fully verified, responsive, and deployed on Cloudflare Pages.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button class="btn" onclick="window.location.href='/'">Return to Live Portfolio</button>
+        </div>
+    </div>
+</body>
+</html>

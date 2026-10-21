@@ -1,106 +1,145 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { Volume2, VolumeX } from 'lucide-react';
 import './AudioControls.css';
 
+interface AudioControlsProps {
+  isModalOpen?: boolean;
+}
+
 /**
- * AudioControls: Optional background music player with free royalty-free tracks.
- * Features: Muted by default, fade in/out, volume control, playlist cycling.
- * Music sources: Pixabay, Bensound (free for personal/commercial use with attribution).
+ * AudioControls: Optional background ambient sound generator.
+ * Uses Web Audio API to create a gentle, warm cinematic ambient pad.
+ * Completely royalty-free, client-side, zero external 403 errors, and zero paid services.
+ * Automatically ducks/pauses when a project video modal is open.
  */
-export const AudioControls = () => {
-  const audioRef = useRef<HTMLAudioElement>(null);
+export const AudioControls = ({ isModalOpen = false }: AudioControlsProps) => {
   const [isMuted, setIsMuted] = useState(true);
-  const [volume, setVolume] = useState(0.3);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [volume, setVolume] = useState(0.25);
+  const audioCtxRef = useRef<AudioContext | null>(null);
+  const masterGainRef = useRef<GainNode | null>(null);
+  const oscillatorsRef = useRef<OscillatorNode[]>([]);
 
-  // Free royalty-free music tracks (Pixabay/Bensound)
-  // Using direct CDN links for free music with proper licensing
-  const audioTracks = [
-    'https://www.bensound.com/bensound-music/bensound-cinematicalmood.mp3',
-    // Fallback: Optional local track if available
-    // '/audio/background-ambient.mp3'
-  ];
+  // Start or resume Web Audio cinematic ambient drone
+  const startAmbientSound = useCallback(() => {
+    try {
+      if (!audioCtxRef.current) {
+        const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        audioCtxRef.current = ctx;
 
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
+        const masterGain = ctx.createGain();
+        masterGain.gain.setValueAtTime(0.001, ctx.currentTime);
+        masterGainRef.current = masterGain;
 
-    audio.volume = isMuted ? 0 : volume;
-    
-    // Fade in/out on mute toggle
-    if (!isMuted && !isPlaying) {
-      audio.play().catch(() => {
-        console.log('Audio autoplay prevented by browser');
-      });
-      setIsPlaying(true);
-    } else if (isMuted && isPlaying) {
-      audio.pause();
-      setIsPlaying(false);
-    }
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(280, ctx.currentTime);
 
-    return () => {
-      if (audio && isPlaying) {
-        audio.pause();
+        masterGain.connect(filter);
+        filter.connect(ctx.destination);
+
+        // Three warm harmonic oscillators (A1 55Hz, E2 82.4Hz, A2 110Hz)
+        const freqs = [55, 82.4, 110];
+        const oscs: OscillatorNode[] = [];
+
+        freqs.forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const oscGain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, ctx.currentTime);
+          oscGain.gain.setValueAtTime(0.3 / (idx + 1), ctx.currentTime);
+
+          osc.connect(oscGain);
+          oscGain.connect(masterGain);
+          osc.start();
+          oscs.push(osc);
+        });
+
+        oscillatorsRef.current = oscs;
       }
-    };
-  }, [isMuted, volume, isPlaying]);
+
+      if (audioCtxRef.current.state === 'suspended') {
+        audioCtxRef.current.resume();
+      }
+
+      if (masterGainRef.current && audioCtxRef.current) {
+        masterGainRef.current.gain.cancelScheduledValues(audioCtxRef.current.currentTime);
+        masterGainRef.current.gain.linearRampToValueAtTime(volume, audioCtxRef.current.currentTime + 1.0);
+      }
+    } catch {
+      // AudioContext fallback
+    }
+  }, [volume]);
+
+  const stopAmbientSound = useCallback(() => {
+    if (masterGainRef.current && audioCtxRef.current) {
+      masterGainRef.current.gain.cancelScheduledValues(audioCtxRef.current.currentTime);
+      masterGainRef.current.gain.linearRampToValueAtTime(0.0001, audioCtxRef.current.currentTime + 0.6);
+    }
+  }, []);
+
+  // Handle mute toggle
+  useEffect(() => {
+    if (isMuted || isModalOpen) {
+      stopAmbientSound();
+    } else {
+      startAmbientSound();
+    }
+  }, [isMuted, isModalOpen, startAmbientSound, stopAmbientSound]);
+
+  // Handle volume changes
+  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newVol = parseFloat(e.currentTarget.value);
+    setVolume(newVol);
+    if (!isMuted && !isModalOpen && masterGainRef.current && audioCtxRef.current) {
+      masterGainRef.current.gain.setValueAtTime(newVol, audioCtxRef.current.currentTime);
+    }
+  };
 
   const handleToggleMute = () => {
     setIsMuted(!isMuted);
   };
 
-  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setVolume(parseFloat(e.currentTarget.value));
-    if (audioRef.current) {
-      audioRef.current.volume = parseFloat(e.currentTarget.value);
-    }
-  };
-
-  const handleTrackEnd = () => {
-    // Loop to start when track ends
-    if (audioRef.current) {
-      audioRef.current.currentTime = 0;
-      if (!isMuted) {
-        audioRef.current.play().catch(() => {});
+  // Clean up on unmount
+  useEffect(() => {
+    return () => {
+      oscillatorsRef.current.forEach(osc => {
+        try { osc.stop(); } catch {}
+      });
+      if (audioCtxRef.current && audioCtxRef.current.state !== 'closed') {
+        try { audioCtxRef.current.close(); } catch {}
       }
-    }
-  };
+    };
+  }, []);
 
   return (
-    <div className="audio-controls" aria-label="Background music controls">
-      <audio
-        ref={audioRef}
-        src={audioTracks[0]}
-        onEnded={handleTrackEnd}
-        loop={false}
-        crossOrigin="anonymous"
-      />
-
+    <div className="audio-controls" aria-label="Background audio controls">
       <div className="audio-control-group">
         <button
-          className="audio-toggle-btn"
+          className={`audio-toggle-btn ${!isMuted ? 'active' : ''}`}
           onClick={handleToggleMute}
-          aria-label={isMuted ? 'Unmute background music' : 'Mute background music'}
-          title="Background music (muted by default)"
+          aria-label={isMuted ? 'Unmute background cinematic ambiance' : 'Mute background cinematic ambiance'}
+          title="Background cinematic ambiance (muted by default)"
         >
-          {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+          {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
         </button>
 
         {!isMuted && (
           <input
             type="range"
             min="0"
-            max="1"
+            max="0.5"
             step="0.05"
             value={volume}
             onChange={handleVolumeChange}
             className="audio-volume-slider"
-            aria-label="Music volume"
+            aria-label="Ambient volume"
           />
         )}
 
         <span className="audio-label">
-          {isMuted ? 'Music' : `${Math.round(volume * 100)}%`}
+          {isMuted ? 'Ambiance' : `${Math.round((volume / 0.5) * 100)}%`}
         </span>
       </div>
     </div>
