@@ -9,6 +9,7 @@ import { Journey } from '../components/Journey';
 import { Philosophy } from '../components/Philosophy';
 import { Contact } from '../components/Contact';
 import { Navigation } from '../components/Navigation';
+import { AudioControls } from '../components/AudioControls';
 import { Project } from '../types/project';
 import { MOCK_PROJECTS } from '../lib/mockData';
 import { isMockMode } from '../lib/supabase';
@@ -43,6 +44,7 @@ export function HomePage() {
   return (
     <>
       <Navigation />
+      <AudioControls />
       <main id="main-content">
         <Hero onWatchShowreel={handleWatchShowreel} />
         <Showreel onProjectSelect={handleProjectSelect} />
