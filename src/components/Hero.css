@@ -521,3 +521,41 @@
     animation: none !important;
   }
 }
+
+/* Visible Hero Sound Toggle Button */
+.hero-sound-toggle-btn {
+  position: absolute;
+  top: 100px;
+  right: 2rem;
+  z-index: 15;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.9rem;
+  background: rgba(14, 14, 18, 0.75);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 9999px;
+  color: var(--color-amber-warm);
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.hero-sound-toggle-btn:hover {
+  background: rgba(212, 175, 55, 0.15);
+  border-color: var(--color-amber-warm);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  .hero-sound-toggle-btn {
+    top: 75px;
+    right: 1rem;
+    padding: 0.35rem 0.7rem;
+    font-size: 0.7rem;
+  }
+}

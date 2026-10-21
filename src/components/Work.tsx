@@ -72,6 +72,19 @@ export const Work = ({ onProjectSelect }: WorkProps) => {
         0.15
       );
 
+      // 3. 3D Orbital Guide Ring
+      vortexTimeline.fromTo(
+        '.vortex-orbital-ring',
+        { opacity: 0, scale: 0.8, rotationX: 75 },
+        { opacity: 0.7, scale: 1, rotationX: 75, duration: 0.35, ease: 'power2.out' },
+        0.1
+      );
+      vortexTimeline.to(
+        '.vortex-orbital-ring',
+        { opacity: 0, scale: 1.15, duration: 0.45, ease: 'power2.in' },
+        0.65
+      );
+
       if (isMobile) {
         // Mobile-optimized lightweight stagger
         cards.forEach((card, i) => {
@@ -83,36 +96,53 @@ export const Work = ({ onProjectSelect }: WorkProps) => {
           );
         });
       } else {
-        // Desktop / Tablet: Controlled Circular Vortex Trajectory
+        // Desktop / Tablet: Complete 3D Circular Orbit Ring Structure
+        const gridW = gridRef.current?.offsetWidth || 1200;
+        const centerX = gridW / 2;
+        const centerY = 300;
+        const radius = Math.min(gridW * 0.36, 420);
+
         cards.forEach((card, index) => {
-          // Compute circular orbit polar coordinates
-          const angle = (index / cards.length) * Math.PI * 2 - Math.PI / 2;
-          const radius = window.innerWidth > 1200 ? 320 : 240;
-          const vortexX = Math.cos(angle) * radius;
-          const vortexY = Math.sin(angle) * radius + 50;
-          const vortexRot = Math.round(((angle * 180) / Math.PI) * 0.22);
+          // Compute delta between card's natural grid center and common orbital center
+          const cardCenterX = card.offsetLeft + card.offsetWidth / 2;
+          const cardCenterY = card.offsetTop + card.offsetHeight / 2;
+          const toCenterX = centerX - cardCenterX;
+          const toCenterY = centerY - cardCenterY;
+
+          // Circular orbit coordinates (cards evenly distributed around full 360° circle)
+          const angle = (index / cards.length) * Math.PI * 2;
+          const orbitX = Math.sin(angle) * radius;
+          const orbitZ = (Math.cos(angle) - 1) * (radius * 0.75); // Negative Z for depth
+          const orbitY = Math.sin(angle * 2) * 28; // Subtle orbital wave
+          const orbitRotY = Math.round((angle * 180) / Math.PI); // Facing circle tangent
+          const orbitRotX = 8;
+          const depthNorm = (Math.cos(angle) + 1) / 2; // 0 for back cards, 1 for front cards
+          const orbitScale = 0.65 + depthNorm * 0.32;
+          const orbitOpacity = 0.52 + depthNorm * 0.48;
 
           vortexTimeline.fromTo(
             card,
             {
-              opacity: 0,
-              x: vortexX,
-              y: vortexY,
-              rotationZ: vortexRot,
-              rotationX: 18,
-              scale: 0.65,
+              x: toCenterX + orbitX,
+              y: toCenterY + orbitY,
+              z: orbitZ,
+              rotationY: orbitRotY,
+              rotationX: orbitRotX,
+              scale: orbitScale,
+              opacity: orbitOpacity,
             },
             {
-              opacity: 1,
               x: 0,
               y: 0,
-              rotationZ: 0,
+              z: 0,
+              rotationY: 0,
               rotationX: 0,
               scale: 1,
-              duration: 0.75,
+              opacity: 1,
+              duration: 0.8,
               ease: 'power2.out',
             },
-            0.2 + index * 0.08 // Staggered arrival sequence into final grid slots
+            0.2 + (index * 0.09) // Staggered arrival sequence into final grid slots
           );
         });
       }
@@ -199,6 +229,9 @@ export const Work = ({ onProjectSelect }: WorkProps) => {
             );
           })}
         </div>
+
+        {/* 3D Circular Orbit Ring Guide */}
+        <div className="vortex-orbital-ring" aria-hidden="true" />
 
         {/* Projects Grid Container (Vortex & Grid target) */}
         <div className="projects-grid" ref={gridRef}>

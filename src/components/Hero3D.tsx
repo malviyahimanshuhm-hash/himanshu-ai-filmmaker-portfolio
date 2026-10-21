@@ -129,73 +129,229 @@ const FilmmakerCharacter = ({ isEntered }: FilmmakerCharacterProps) => {
   });
 
   return (
-    <group ref={groupRef} position={[0, -0.3, 0]} scale={[0.88, 0.88, 0.88]}>
-      {/* --- Stylized Director Figure --- */}
+    <group ref={groupRef} position={[0, -0.42, 0]} scale={[0.85, 0.85, 0.85]}>
+      {/* --- STYLIZED HUMAN MALE FILMMAKER CHARACTER --- */}
       <group position={[0, 0, 0]}>
-        {/* Head with Director's Cap */}
-        <mesh position={[0, 1.45, 0]} castShadow>
-          <sphereGeometry args={[0.3, 32, 32]} />
+        {/* === HEAD & FACIAL STRUCTURE === */}
+        {/* 1. Cranium / Head Base (natural human head proportions) */}
+        <mesh position={[0, 1.48, 0]} scale={[0.88, 1.05, 0.95]} castShadow>
+          <sphereGeometry args={[0.27, 32, 32]} />
           <meshStandardMaterial
-            color="#d4af37"
-            metalness={0.25}
-            roughness={0.55}
+            color="#c68a64"
+            roughness={0.65}
+            metalness={0.02}
           />
         </mesh>
 
-        {/* Cinematic Cap Visor */}
-        <mesh position={[0, 1.62, 0.18]} rotation={[0.2, 0, 0]} castShadow>
-          <boxGeometry args={[0.42, 0.05, 0.32]} />
-          <meshStandardMaterial color="#1a1a1a" roughness={0.4} />
-        </mesh>
-
-        {/* Headphones on character */}
-        <mesh position={[0, 1.48, 0]} castShadow>
-          <torusGeometry args={[0.32, 0.04, 16, 32]} />
-          <meshStandardMaterial color="#2a2a2a" metalness={0.7} roughness={0.3} />
-        </mesh>
-        <mesh position={[-0.32, 1.45, 0]} castShadow>
-          <cylinderGeometry args={[0.08, 0.08, 0.06, 16]} />
-          <meshStandardMaterial color="#d4af37" metalness={0.8} roughness={0.2} />
-        </mesh>
-        <mesh position={[0.32, 1.45, 0]} castShadow>
-          <cylinderGeometry args={[0.08, 0.08, 0.06, 16]} />
-          <meshStandardMaterial color="#d4af37" metalness={0.8} roughness={0.2} />
-        </mesh>
-
-        {/* Torso in Director's Trench / Jacket */}
-        <mesh position={[0, 0.75, 0]} castShadow receiveShadow>
-          <capsuleGeometry args={[0.36, 0.8, 8, 16]} />
+        {/* 2. Sculpted Human Jaw & Chin */}
+        <mesh position={[0, 1.28, 0.08]} rotation={[0.22, 0, 0]} scale={[0.88, 1, 1]} castShadow>
+          <cylinderGeometry args={[0.21, 0.14, 0.22, 16]} />
           <meshStandardMaterial
-            color="#141416"
-            metalness={0.3}
-            roughness={0.7}
+            color="#c68a64"
+            roughness={0.65}
+            metalness={0.02}
+          />
+        </mesh>
+        {/* Chin Prominence */}
+        <mesh position={[0, 1.21, 0.17]} castShadow>
+          <sphereGeometry args={[0.075, 16, 16]} />
+          <meshStandardMaterial color="#c68a64" roughness={0.65} />
+        </mesh>
+
+        {/* 3. Designer Stubble / Short Groomed Beard along jawline */}
+        <mesh position={[0, 1.24, 0.09]} rotation={[0.2, 0, 0]} scale={[0.91, 1.03, 1.04]}>
+          <cylinderGeometry args={[0.215, 0.145, 0.20, 16]} />
+          <meshStandardMaterial
+            color="#221e1b"
+            roughness={0.85}
+            metalness={0.05}
           />
         </mesh>
 
-        {/* Warm Gold Scarf / Accent Collar */}
-        <mesh position={[0, 1.15, 0.08]} castShadow>
-          <torusGeometry args={[0.25, 0.06, 16, 24]} />
-          <meshStandardMaterial color="#aa8c2c" roughness={0.5} />
+        {/* 4. Natural Stylized Human Eyes */}
+        {/* Left Eye Sclera */}
+        <mesh position={[-0.088, 1.50, 0.23]} castShadow>
+          <sphereGeometry args={[0.04, 16, 16]} />
+          <meshStandardMaterial color="#f6f3ee" roughness={0.15} />
+        </mesh>
+        {/* Left Eye Iris (warm amber brown) */}
+        <mesh position={[-0.088, 1.50, 0.264]}>
+          <circleGeometry args={[0.021, 16]} />
+          <meshStandardMaterial color="#4a2c17" roughness={0.1} metalness={0.15} />
+        </mesh>
+        {/* Left Eye Pupil */}
+        <mesh position={[-0.088, 1.50, 0.266]}>
+          <circleGeometry args={[0.01, 16]} />
+          <meshBasicMaterial color="#080808" />
+        </mesh>
+        {/* Left Eyebrow (focused, determined filmmaker gaze) */}
+        <mesh position={[-0.092, 1.56, 0.245]} rotation={[0, 0, 0.12]} castShadow>
+          <boxGeometry args={[0.082, 0.018, 0.03]} />
+          <meshStandardMaterial color="#1c1815" roughness={0.7} />
         </mesh>
 
-        {/* Left Arm holding camera */}
-        <mesh position={[-0.45, 0.95, 0.25]} rotation={[0.6, 0.2, -0.4]} castShadow>
-          <capsuleGeometry args={[0.1, 0.55, 6, 12]} />
-          <meshStandardMaterial color="#1a1a1a" roughness={0.7} />
+        {/* Right Eye Sclera */}
+        <mesh position={[0.088, 1.50, 0.23]} castShadow>
+          <sphereGeometry args={[0.04, 16, 16]} />
+          <meshStandardMaterial color="#f6f3ee" roughness={0.15} />
+        </mesh>
+        {/* Right Eye Iris (warm amber brown) */}
+        <mesh position={[0.088, 1.50, 0.264]}>
+          <circleGeometry args={[0.021, 16]} />
+          <meshStandardMaterial color="#4a2c17" roughness={0.1} metalness={0.15} />
+        </mesh>
+        {/* Right Eye Pupil */}
+        <mesh position={[0.088, 1.50, 0.266]}>
+          <circleGeometry args={[0.01, 16]} />
+          <meshBasicMaterial color="#080808" />
+        </mesh>
+        {/* Right Eyebrow */}
+        <mesh position={[0.092, 1.56, 0.245]} rotation={[0, 0, -0.12]} castShadow>
+          <boxGeometry args={[0.082, 0.018, 0.03]} />
+          <meshStandardMaterial color="#1c1815" roughness={0.7} />
         </mesh>
 
-        {/* Right Arm supporting rig */}
-        <mesh position={[0.45, 0.95, 0.35]} rotation={[0.7, -0.3, 0.5]} castShadow>
-          <capsuleGeometry args={[0.1, 0.55, 6, 12]} />
-          <meshStandardMaterial color="#1a1a1a" roughness={0.7} />
+        {/* 5. Sculpted Human Nose */}
+        <mesh position={[0, 1.45, 0.25]} rotation={[0.18, 0, 0]} castShadow>
+          <coneGeometry args={[0.032, 0.13, 8]} />
+          <meshStandardMaterial color="#c68a64" roughness={0.65} />
+        </mesh>
+        <mesh position={[0, 1.39, 0.28]} castShadow>
+          <sphereGeometry args={[0.026, 12, 12]} />
+          <meshStandardMaterial color="#c68a64" roughness={0.65} />
+        </mesh>
+
+        {/* 6. Sculpted Human Mouth & Lips */}
+        {/* Upper Lip */}
+        <mesh position={[0, 1.32, 0.24]} rotation={[0, 0, 0]}>
+          <boxGeometry args={[0.075, 0.015, 0.025]} />
+          <meshStandardMaterial color="#9c6456" roughness={0.5} />
+        </mesh>
+        {/* Lower Lip */}
+        <mesh position={[0, 1.295, 0.238]}>
+          <boxGeometry args={[0.068, 0.018, 0.028]} />
+          <meshStandardMaterial color="#9c6456" roughness={0.5} />
+        </mesh>
+
+        {/* 7. Human Ears */}
+        <mesh position={[-0.245, 1.48, -0.01]} rotation={[0, -0.2, 0.1]} castShadow>
+          <sphereGeometry args={[0.055, 12, 12]} />
+          <meshStandardMaterial color="#c68a64" roughness={0.65} />
+        </mesh>
+        <mesh position={[0.245, 1.48, -0.01]} rotation={[0, 0.2, -0.1]} castShadow>
+          <sphereGeometry args={[0.055, 12, 12]} />
+          <meshStandardMaterial color="#c68a64" roughness={0.65} />
+        </mesh>
+
+        {/* 8. Stylized Modern Filmmaker Hair (Textured Undercut & Volume) */}
+        {/* Top Swept Volume */}
+        <mesh position={[0, 1.73, 0.02]} rotation={[-0.15, 0, 0]} scale={[1, 0.45, 1.15]} castShadow>
+          <sphereGeometry args={[0.26, 24, 24]} />
+          <meshStandardMaterial color="#1a1714" roughness={0.55} metalness={0.1} />
+        </mesh>
+        {/* Front Quiff Volume */}
+        <mesh position={[0, 1.74, 0.14]} rotation={[0.3, 0, 0]} scale={[0.88, 0.45, 0.6]} castShadow>
+          <sphereGeometry args={[0.22, 16, 16]} />
+          <meshStandardMaterial color="#1a1714" roughness={0.55} metalness={0.1} />
+        </mesh>
+        {/* Left Hair Fade / Taper */}
+        <mesh position={[-0.21, 1.62, 0.02]} scale={[0.4, 0.8, 1.0]} castShadow>
+          <sphereGeometry args={[0.18, 16, 16]} />
+          <meshStandardMaterial color="#141210" roughness={0.7} />
+        </mesh>
+        {/* Right Hair Fade / Taper */}
+        <mesh position={[0.21, 1.62, 0.02]} scale={[0.4, 0.8, 1.0]} castShadow>
+          <sphereGeometry args={[0.18, 16, 16]} />
+          <meshStandardMaterial color="#141210" roughness={0.7} />
+        </mesh>
+        {/* Back Hair Volume */}
+        <mesh position={[0, 1.54, -0.17]} scale={[0.9, 0.9, 0.6]} castShadow>
+          <sphereGeometry args={[0.22, 16, 16]} />
+          <meshStandardMaterial color="#141210" roughness={0.7} />
+        </mesh>
+
+        {/* === NECK & ANATOMICAL UPPER BODY === */}
+        {/* 9. Human Neck with Adam's Apple definition */}
+        <mesh position={[0, 1.12, 0.02]} castShadow>
+          <cylinderGeometry args={[0.11, 0.135, 0.20, 16]} />
+          <meshStandardMaterial color="#c68a64" roughness={0.65} />
+        </mesh>
+        {/* Adam's apple */}
+        <mesh position={[0, 1.14, 0.13]}>
+          <sphereGeometry args={[0.022, 8, 8]} />
+          <meshStandardMaterial color="#c68a64" roughness={0.65} />
+        </mesh>
+
+        {/* 10. Wardrobe: Black High-Neck Turtleneck & Tailored Director's Jacket */}
+        {/* Turtleneck Collar */}
+        <mesh position={[0, 1.03, 0.02]} castShadow>
+          <cylinderGeometry args={[0.142, 0.155, 0.12, 18]} />
+          <meshStandardMaterial color="#111114" roughness={0.85} />
+        </mesh>
+        {/* Torso / Blazer Body (Masculine V-Taper) */}
+        <mesh position={[0, 0.58, 0.02]} castShadow receiveShadow>
+          <cylinderGeometry args={[0.34, 0.28, 0.85, 20]} />
+          <meshStandardMaterial
+            color="#141418"
+            roughness={0.8}
+            metalness={0.12}
+          />
+        </mesh>
+        {/* Blazer Lapel Left Fold */}
+        <mesh position={[-0.12, 0.76, 0.20]} rotation={[0.1, -0.2, -0.15]} castShadow>
+          <boxGeometry args={[0.08, 0.42, 0.04]} />
+          <meshStandardMaterial color="#101012" roughness={0.8} />
+        </mesh>
+        {/* Blazer Lapel Right Fold */}
+        <mesh position={[0.12, 0.76, 0.20]} rotation={[0.1, 0.2, 0.15]} castShadow>
+          <boxGeometry args={[0.08, 0.42, 0.04]} />
+          <meshStandardMaterial color="#101012" roughness={0.8} />
+        </mesh>
+        {/* Gold Lapel Director's Crest / Pin */}
+        <mesh position={[-0.18, 0.82, 0.22]}>
+          <boxGeometry args={[0.03, 0.04, 0.015]} />
+          <meshStandardMaterial color="#d4af37" metalness={0.9} roughness={0.15} />
+        </mesh>
+
+        {/* 11. Natural Human Shoulders & Arms */}
+        {/* Left Shoulder */}
+        <mesh position={[-0.38, 0.88, 0.02]} castShadow>
+          <sphereGeometry args={[0.14, 16, 16]} />
+          <meshStandardMaterial color="#141418" roughness={0.8} />
+        </mesh>
+        {/* Left Arm (angled gracefully toward director's viewfinder) */}
+        <mesh position={[-0.32, 0.68, 0.18]} rotation={[0.7, 0.2, -0.35]} castShadow>
+          <capsuleGeometry args={[0.085, 0.42, 6, 12]} />
+          <meshStandardMaterial color="#141418" roughness={0.8} />
+        </mesh>
+        {/* Left Hand holding viewfinder grip */}
+        <mesh position={[-0.18, 0.78, 0.46]} castShadow>
+          <sphereGeometry args={[0.062, 12, 12]} />
+          <meshStandardMaterial color="#c68a64" roughness={0.65} />
+        </mesh>
+
+        {/* Right Shoulder */}
+        <mesh position={[0.38, 0.88, 0.02]} castShadow>
+          <sphereGeometry args={[0.14, 16, 16]} />
+          <meshStandardMaterial color="#141418" roughness={0.8} />
+        </mesh>
+        {/* Right Arm */}
+        <mesh position={[0.30, 0.66, 0.22]} rotation={[0.65, -0.25, 0.35]} castShadow>
+          <capsuleGeometry args={[0.085, 0.42, 6, 12]} />
+          <meshStandardMaterial color="#141418" roughness={0.8} />
+        </mesh>
+        {/* Right Hand supporting bottom */}
+        <mesh position={[0.14, 0.72, 0.44]} castShadow>
+          <sphereGeometry args={[0.062, 12, 12]} />
+          <meshStandardMaterial color="#c68a64" roughness={0.65} />
         </mesh>
       </group>
 
-      {/* --- High-End Cinema Camera Rig --- */}
-      <group ref={cameraRigRef} position={[0.25, 1.05, 0.65]} rotation={[0.05, -0.25, 0]}>
-        {/* Main Camera Body (ARRI / RED inspired) */}
+      {/* === DIRECTOR'S PROFESSIONAL OPTICAL VIEWFINDER & MONITOR RIG === */}
+      <group ref={cameraRigRef} position={[0, 0.84, 0.52]} rotation={[0.08, -0.12, 0]}>
+        {/* Sleek Handheld Director's Viewfinder Body */}
         <mesh castShadow receiveShadow>
-          <boxGeometry args={[0.5, 0.38, 0.65]} />
+          <boxGeometry args={[0.28, 0.20, 0.34]} />
           <meshStandardMaterial
             color="#18191c"
             metalness={0.85}
@@ -203,78 +359,67 @@ const FilmmakerCharacter = ({ isEntered }: FilmmakerCharacterProps) => {
           />
         </mesh>
 
-        {/* Gold Accent Strip on camera */}
-        <mesh position={[0, 0.12, 0.33]}>
-          <boxGeometry args={[0.51, 0.03, 0.02]} />
-          <meshStandardMaterial color="#d4af37" metalness={0.9} roughness={0.1} />
+        {/* Gold Anodized Lens Mount Ring */}
+        <mesh position={[0, 0, 0.18]} rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.082, 0.082, 0.04, 24]} />
+          <meshStandardMaterial color="#d4af37" metalness={0.92} roughness={0.12} />
         </mesh>
 
-        {/* Matte Box Hood */}
-        <mesh position={[0, 0.02, 0.55]} rotation={[0, 0, 0]} castShadow>
-          <boxGeometry args={[0.42, 0.34, 0.18]} />
-          <meshStandardMaterial color="#0d0e10" roughness={0.9} />
-        </mesh>
-
-        {/* Cinema Prime Lens Barrel */}
-        <mesh position={[0, 0.02, 0.36]} rotation={[Math.PI / 2, 0, 0]} castShadow>
-          <cylinderGeometry args={[0.16, 0.16, 0.25, 24]} />
+        {/* Optical Cinema Prime Lens Barrel */}
+        <mesh position={[0, 0, 0.26]} rotation={[Math.PI / 2, 0, 0]} castShadow>
+          <cylinderGeometry args={[0.075, 0.075, 0.14, 24]} />
           <meshStandardMaterial
-            color="#222328"
-            metalness={0.9}
-            roughness={0.15}
+            color="#24262b"
+            metalness={0.85}
+            roughness={0.2}
           />
         </mesh>
 
-        {/* Lens Glass with iridescent film reflection */}
-        <mesh position={[0, 0.02, 0.49]}>
-          <circleGeometry args={[0.13, 24]} />
+        {/* Viewfinder Lens Glass Element (Deep Blue Film Coating) */}
+        <mesh position={[0, 0, 0.335]}>
+          <circleGeometry args={[0.065, 24]} />
           <meshStandardMaterial
-            color="#1a2d42"
+            color="#15283e"
             metalness={0.95}
             roughness={0.05}
             side={THREE.DoubleSide}
           />
         </mesh>
 
-        {/* Red REC Tally Light */}
-        <mesh position={[0.18, 0.14, 0.34]}>
-          <sphereGeometry args={[0.025, 16, 16]} />
+        {/* Compact AMOLED Director's OLED Monitor on top */}
+        <mesh position={[0, 0.15, -0.04]} rotation={[-0.25, 0, 0]} castShadow>
+          <boxGeometry args={[0.24, 0.14, 0.03]} />
+          <meshStandardMaterial color="#111114" metalness={0.6} roughness={0.3} />
+        </mesh>
+        {/* Monitor Screen Glowing Film Frame */}
+        <mesh position={[0, 0.15, -0.024]} rotation={[-0.25, 0, 0]}>
+          <planeGeometry args={[0.21, 0.11]} />
+          <meshBasicMaterial color="#0b1e33" />
+        </mesh>
+
+        {/* Red REC Tally Indicator */}
+        <mesh position={[0.11, 0.07, 0.18]}>
+          <sphereGeometry args={[0.016, 12, 12]} />
           <meshBasicMaterial color="#ff2a2a" />
         </mesh>
         <pointLight
           ref={recLightRef}
-          position={[0.18, 0.14, 0.38]}
+          position={[0.11, 0.07, 0.22]}
           color="#ff2222"
-          intensity={1.5}
-          distance={1.5}
+          intensity={1.2}
+          distance={1.2}
         />
-
-        {/* Monitor / Viewfinder Display */}
-        <mesh position={[-0.32, 0.12, -0.05]} rotation={[0, 0.45, 0]} castShadow>
-          <boxGeometry args={[0.04, 0.22, 0.32]} />
-          <meshStandardMaterial color="#1a1a1a" metalness={0.5} roughness={0.4} />
-        </mesh>
-        <mesh position={[-0.35, 0.12, -0.05]} rotation={[0, 0.45, 0]}>
-          <planeGeometry args={[0.28, 0.18]} />
-          <meshBasicMaterial color="#0a2540" />
-        </mesh>
-
-        {/* Top Handle */}
-        <mesh position={[0, 0.26, -0.05]} castShadow>
-          <boxGeometry args={[0.08, 0.06, 0.45]} />
-          <meshStandardMaterial color="#2d2d30" metalness={0.8} roughness={0.3} />
-        </mesh>
       </group>
 
-      {/* Atmospheric Cinema Floor Disc */}
-      <mesh position={[0, -0.1, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-        <ringGeometry args={[0.5, 2.2, 32]} />
+      {/* Atmospheric Cinema Floor Pedestal */}
+      <mesh position={[0, -0.05, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+        <ringGeometry args={[0.4, 2.0, 32]} />
         <meshStandardMaterial
           color="#0f0f12"
           metalness={0.5}
           roughness={0.8}
           transparent
-          opacity={0.35}
+          opacity={0.3}
         />
       </mesh>
     </group>
@@ -304,40 +449,47 @@ export const Hero3D = ({ isEntered = true }: Hero3DProps) => {
           gl.toneMappingExposure = 1.15;
         }}
       >
-        {/* Procedural Cinematic Studio Lighting — Zero external CDN network dependencies */}
-        <ambientLight intensity={1.1} color="#181d2c" />
+        {/* Procedural Cinematic Studio Lighting — Calibrated for Stylized Human Filmmaker */}
+        <ambientLight intensity={1.2} color="#161a24" />
 
-        {/* Warm Golden Key Light */}
+        {/* Soft Warm Key Light (sculpting facial geometry, cheekbones and jawline) */}
         <directionalLight
-          position={[3.5, 4.2, 3]}
-          intensity={3.6}
-          color="#f4c430"
+          position={[2.5, 2.5, 3.2]}
+          intensity={2.8}
+          color="#fff2df"
           castShadow
           shadow-mapSize-width={1024}
           shadow-mapSize-height={1024}
         />
 
-        {/* Cool Cyan Rim Light for Hollywood Contrast */}
+        {/* Powerful Warm-Gold Rim Light (casting golden halo along hair silhouette & shoulders) */}
         <directionalLight
-          position={[-3.5, 3.2, -2]}
-          intensity={1.8}
-          color="#38bdf8"
+          position={[-3.2, 2.8, -1.8]}
+          intensity={4.5}
+          color="#f4c430"
         />
 
-        {/* Warm Amber Accent / Under-Glow */}
-        <pointLight
-          position={[0, 0.2, 1.5]}
-          intensity={1.2}
-          color="#ffaa00"
-          distance={4}
+        {/* Secondary Gold Edge Fill */}
+        <directionalLight
+          position={[3.0, 1.8, -2.0]}
+          intensity={2.2}
+          color="#d4af37"
         />
 
-        {/* Top Crisp Overhead Highlight */}
+        {/* Cool Cyan Ambient Shadow Fill for Hollywood Anamorphic Contrast */}
         <pointLight
-          position={[0, 4.5, 0.5]}
+          position={[0, 0.4, 2.2]}
           intensity={1.0}
-          color="#ffffff"
-          distance={6}
+          color="#38bdf8"
+          distance={5}
+        />
+
+        {/* Overhead Subtle Hair Highlight */}
+        <pointLight
+          position={[0, 3.8, 0.2]}
+          intensity={1.4}
+          color="#ffe8a3"
+          distance={5}
         />
 
         <FilmmakerCharacter isEntered={isEntered} />

@@ -12,7 +12,19 @@ interface HeroProps {
 }
 
 // Spoken introduction string specified in Master Implementation Specification
-const INTRO_SPOKEN_LINE = "Hi, I’m Himanshu, and I’m a professional AI filmmaker.";
+/**
+ * Configurable Audio & Voice parameters for the Hero Cinematic Intro
+ */
+export const HERO_AUDIO_CONFIG = {
+  musicSrc: '/audio/heroic-intro.mp3',
+  spokenLine: "Hi, I’m Himanshu, and I’m a professional AI filmmaker.",
+  musicVolumeNormal: 0.65,
+  musicVolumeDucked: 0.16,
+  voiceVolume: 1.0,
+  voiceSpeechRate: 0.92,
+  voiceSpeechPitch: 0.96,
+  speechDelayMs: 2000,
+};
 
 export const Hero = ({ onWatchShowreel }: HeroProps) => {
   // Session storage check so intro doesn't force-replay on repeated scrolls
@@ -25,6 +37,60 @@ export const Hero = ({ onWatchShowreel }: HeroProps) => {
   const [soundEnabled, setSoundEnabled] = useState(false);
   const [subtitleText, setSubtitleText] = useState('');
   const speechRef = useRef<SpeechSynthesisUtterance | null>(null);
+  const musicAudioRef = useRef<HTMLAudioElement | null>(null);
+  const duckIntervalRef = useRef<number | null>(null);
+
+  // Safely stop intro music and clear active timers
+  const stopIntroMusic = useCallback(() => {
+    if (duckIntervalRef.current) {
+      window.clearInterval(duckIntervalRef.current);
+      duckIntervalRef.current = null;
+    }
+    if (musicAudioRef.current) {
+      musicAudioRef.current.pause();
+      musicAudioRef.current.currentTime = 0;
+      musicAudioRef.current = null;
+    }
+  }, []);
+
+  // Smoothly ramp music volume up or down (for ducking under speech and restoration)
+  const rampMusicVolume = useCallback((targetVol: number, durationMs: number = 350) => {
+    const audio = musicAudioRef.current;
+    if (!audio) return;
+    if (duckIntervalRef.current) {
+      window.clearInterval(duckIntervalRef.current);
+      duckIntervalRef.current = null;
+    }
+    const startVol = audio.volume;
+    const steps = 14;
+    const stepTime = durationMs / steps;
+    const volDiff = targetVol - startVol;
+    let currentStep = 0;
+
+    duckIntervalRef.current = window.setInterval(() => {
+      currentStep++;
+      const progress = currentStep / steps;
+      if (audio) {
+        audio.volume = Math.max(0, Math.min(1, startVol + volDiff * progress));
+      }
+      if (currentStep >= steps) {
+        if (duckIntervalRef.current) {
+          window.clearInterval(duckIntervalRef.current);
+          duckIntervalRef.current = null;
+        }
+      }
+    }, stepTime);
+  }, []);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      stopIntroMusic();
+      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, [stopIntroMusic]);
 
   // Phase 2: Title and hero content progressively exit upward on scroll
   useEffect(() => {
@@ -48,7 +114,7 @@ export const Hero = ({ onWatchShowreel }: HeroProps) => {
     return () => ctx.revert();
   }, [prefersReducedMotion]);
 
-  // Play subtle cinematic low-frequency sub-bass chord using native Web Audio API (zero external assets/cost)
+  // Play subtle cinematic low-frequency sub-bass chord fallback
   const playCinematicSoundAccent = useCallback(() => {
     try {
       const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
@@ -60,8 +126,8 @@ export const Hero = ({ onWatchShowreel }: HeroProps) => {
       const gain = ctx.createGain();
 
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(55, ctx.currentTime); // Low A1 (55Hz)
-      osc.frequency.exponentialRampToValueAtTime(110, ctx.currentTime + 1.2); // Warm swell to A2 (110Hz)
+      osc.frequency.setValueAtTime(55, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(110, ctx.currentTime + 1.2);
 
       gain.gain.setValueAtTime(0.001, ctx.currentTime);
       gain.gain.linearRampToValueAtTime(0.18, ctx.currentTime + 0.4);
@@ -77,34 +143,34 @@ export const Hero = ({ onWatchShowreel }: HeroProps) => {
     }
   }, []);
 
-  // Native Speech Synthesis for the spoken introduction
-  const speakIntroduction = useCallback(() => {
-    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
-
-    try {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(INTRO_SPOKEN_LINE);
-      utterance.rate = 0.92;
-      utterance.pitch = 0.98;
-      utterance.lang = 'en-US';
-
-      // Pick natural or English voice if available
-      const voices = window.speechSynthesis.getVoices();
-      const natural = voices.find(v => (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('David')) && v.lang.startsWith('en'));
-      if (natural) utterance.voice = natural;
-
-      speechRef.current = utterance;
-      window.speechSynthesis.speak(utterance);
-    } catch {
-      // Fallback if synthesis restricted
-    }
-  }, []);
-
-  // Start the interactive sequence
+  // Start the interactive sequence with heroic entrance music and ducked voice
   const startSequence = (withSound: boolean) => {
+    // Prevent overlapping audio from repeated triggers
+    stopIntroMusic();
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+
     setSoundEnabled(withSound);
+
     if (withSound) {
-      playCinematicSoundAccent();
+      // 1. Play heroic music cue in response to user gesture
+      try {
+        const audio = new Audio(HERO_AUDIO_CONFIG.musicSrc);
+        audio.volume = HERO_AUDIO_CONFIG.musicVolumeNormal;
+        musicAudioRef.current = audio;
+        audio.play().catch((err) => {
+          console.warn('Hero entrance music fallback:', err);
+          playCinematicSoundAccent();
+        });
+
+        // Automatically fade out music as intro completes
+        setTimeout(() => {
+          rampMusicVolume(0, 2200);
+        }, 13000);
+      } catch (err) {
+        console.warn('Audio initialization error:', err);
+      }
     }
 
     setIntroStage('cinematic_opening');
@@ -114,31 +180,76 @@ export const Hero = ({ onWatchShowreel }: HeroProps) => {
       setIntroStage('avatar_entering');
     }, 700);
 
-    // Scene 3: Spoken Introduction
+    // Scene 3: Spoken Introduction with ducking
     setTimeout(() => {
       setIntroStage('speaking');
-      setSubtitleText(INTRO_SPOKEN_LINE);
-      if (withSound) {
-        speakIntroduction();
-      }
-    }, 1800);
+      setSubtitleText(HERO_AUDIO_CONFIG.spokenLine);
 
-    // Scene 4: Typography reveal & finalize
+      if (withSound) {
+        // Automatically lower music volume under speech
+        rampMusicVolume(HERO_AUDIO_CONFIG.musicVolumeDucked, 350);
+
+        if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+          try {
+            const utterance = new SpeechSynthesisUtterance(HERO_AUDIO_CONFIG.spokenLine);
+            utterance.rate = HERO_AUDIO_CONFIG.voiceSpeechRate;
+            utterance.pitch = HERO_AUDIO_CONFIG.voiceSpeechPitch;
+            utterance.lang = 'en-US';
+            utterance.volume = HERO_AUDIO_CONFIG.voiceVolume;
+
+            const voices = window.speechSynthesis.getVoices();
+            const natural = voices.find(v => (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('David')) && v.lang.startsWith('en'));
+            if (natural) utterance.voice = natural;
+
+            // When speech ends: restore music volume!
+            utterance.onend = () => {
+              rampMusicVolume(0.55, 450);
+            };
+            utterance.onerror = () => {
+              rampMusicVolume(0.55, 300);
+            };
+
+            speechRef.current = utterance;
+            window.speechSynthesis.speak(utterance);
+          } catch {
+            rampMusicVolume(0.55, 300);
+          }
+        }
+      }
+    }, HERO_AUDIO_CONFIG.speechDelayMs);
+
+    // Scene 4: Full Typography Reveal
     setTimeout(() => {
       setIntroStage('revealed');
       if (typeof window !== 'undefined') {
         sessionStorage.setItem('himanshu_intro_seen', 'true');
       }
-    }, 4600);
+    }, 5000);
   };
 
   const skipIntro = () => {
+    stopIntroMusic();
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
       window.speechSynthesis.cancel();
     }
     setIntroStage('revealed');
     if (typeof window !== 'undefined') {
       sessionStorage.setItem('himanshu_intro_seen', 'true');
+    }
+  };
+
+  const toggleSoundAfterIntro = () => {
+    if (soundEnabled) {
+      stopIntroMusic();
+      setSoundEnabled(false);
+    } else {
+      setSoundEnabled(true);
+      try {
+        const audio = new Audio(HERO_AUDIO_CONFIG.musicSrc);
+        audio.volume = 0.45;
+        musicAudioRef.current = audio;
+        audio.play().catch(() => {});
+      } catch {}
     }
   };
 
@@ -284,6 +395,19 @@ export const Hero = ({ onWatchShowreel }: HeroProps) => {
           </div>
         </div>
       </div>
+
+      {/* Visible Hero Sound Toggle Button */}
+      {introStage === 'revealed' && (
+        <button
+          className="hero-sound-toggle-btn"
+          onClick={toggleSoundAfterIntro}
+          aria-label={soundEnabled ? "Mute Hero Audio" : "Play Hero Theme"}
+          title={soundEnabled ? "Mute Hero Theme" : "Play Hero Theme"}
+        >
+          {soundEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
+          <span>{soundEnabled ? "Theme On" : "Theme Off"}</span>
+        </button>
+      )}
 
       <div className="scroll-indicator" aria-hidden="true">
         <span></span>

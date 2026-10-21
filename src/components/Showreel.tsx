@@ -194,7 +194,7 @@ export const Showreel = ({ onProjectSelect }: ShowreelProps) => {
                 </div>
 
                 <div className="controls-right">
-                  <span className="cinema-badge">4K AI DIRECTED</span>
+                  <span className="cinema-badge">9:16 VERTICAL CINEMA</span>
                   <button
                     className="ctrl-btn"
                     onClick={toggleFullscreen}
