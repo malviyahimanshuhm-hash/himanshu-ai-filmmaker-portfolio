@@ -1,0 +1,39 @@
+/* Hero 3D Wrapper & Canvas */
+.hero-3d-wrapper {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 55%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.95;
+  transition: opacity 0.5s ease;
+}
+
+.hero-3d-canvas {
+  width: 100% !important;
+  height: 100% !important;
+  pointer-events: none;
+}
+
+/* On tablet & mobile: full background with soft vignette so text remains crisp */
+@media (max-width: 1024px) {
+  .hero-3d-wrapper {
+    width: 100%;
+    opacity: 0.45;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-3d-wrapper {
+    width: 100%;
+    opacity: 0.35;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-3d-wrapper {
+    transition: none !important;
+  }
+}

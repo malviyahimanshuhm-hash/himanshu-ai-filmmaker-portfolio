@@ -1,0 +1,87 @@
+.journey {
+  padding: var(--spacing-section) 0;
+  background: var(--color-bg-dark);
+  min-height: 100vh;
+}
+
+.journey-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-container);
+}
+
+.timeline {
+  position: relative;
+  margin-top: 3rem;
+}
+
+.timeline-item {
+  display: flex;
+  gap: 2rem;
+  padding-bottom: 3rem;
+}
+
+.timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+.timeline-marker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.marker-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--color-amber-warm);
+  border: 3px solid var(--color-bg-dark);
+  box-shadow: 0 0 0 3px var(--color-amber-warm);
+}
+
+.marker-line {
+  width: 2px;
+  flex: 1;
+  background: linear-gradient(to bottom, var(--color-amber-warm), transparent);
+  margin: 10px 0;
+}
+
+.timeline-content {
+  flex: 1;
+  padding-bottom: 2rem;
+}
+
+.timeline-year {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: rgba(212, 175, 55, 0.1);
+  color: var(--color-amber-warm);
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+}
+
+.timeline-title {
+  font-size: 1.5rem;
+  color: var(--color-text-primary);
+  margin-bottom: 0.75rem;
+  font-weight: 400;
+}
+
+.timeline-description {
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+  font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+  .timeline-item {
+    gap: 1.5rem;
+  }
+
+  .timeline-content {
+    padding-bottom: 1rem;
+  }
+}
