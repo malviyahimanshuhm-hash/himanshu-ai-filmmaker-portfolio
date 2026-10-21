@@ -34,8 +34,8 @@ export const Hero = ({ onWatchShowreel }: HeroProps) => {
           </div>
 
           <h1 className="hero-title">
-            HIMANSHU
-            <span className="hero-title-accent"> MALVIYA</span>
+            <span className="hero-title-word">HIMANSHU</span>
+            <span className="hero-title-word hero-title-accent"> MALVIYA</span>
           </h1>
 
           <h2 className="hero-subtitle">

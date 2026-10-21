@@ -1,5 +1,10 @@
+import { useEffect, useRef } from 'react';
 import { MapPin } from 'lucide-react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './Journey.css';
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface TimelineItem {
   year: string;
@@ -31,8 +36,59 @@ const TIMELINE: TimelineItem[] = [
 ];
 
 export const Journey = () => {
+  const sectionRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!sectionRef.current) return;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
+    const ctx = gsap.context(() => {
+      // Stagger timeline items on scroll
+      gsap.from('.timeline-item', {
+        scrollTrigger: {
+          trigger: '#journey',
+          start: 'top 60%',
+          end: 'top 20%',
+          scrub: 0.5,
+          markers: false,
+        },
+        opacity: 0,
+        x: -40,
+        stagger: 0.2,
+      });
+
+      // Animate timeline line
+      gsap.from('.marker-line', {
+        scrollTrigger: {
+          trigger: '#journey',
+          start: 'top 50%',
+          end: 'bottom 20%',
+          scrub: 1,
+        },
+        scaleY: 0,
+        transformOrigin: 'top',
+        stagger: 0.1,
+      });
+
+      // Pulse marker dots on scroll
+      gsap.to('.marker-dot', {
+        scrollTrigger: {
+          trigger: '#journey',
+          start: 'top 50%',
+          end: 'bottom 20%',
+          scrub: 0.5,
+        },
+        boxShadow: '0 0 20px rgba(212, 175, 55, 0.6)',
+        stagger: 0.2,
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section id="journey" className="journey">
+    <section id="journey" className="journey" ref={sectionRef}>
       <div className="journey-container">
         <div className="section-header">
           <h2 className="section-title">My Journey</h2>

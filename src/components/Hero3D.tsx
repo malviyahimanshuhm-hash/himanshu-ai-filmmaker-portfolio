@@ -96,7 +96,7 @@ const FilmmakerCharacter = () => {
   });
 
   return (
-    <group ref={groupRef} position={[0.2, 0, 0]}>
+    <group ref={groupRef} position={[0, -0.15, 0]}>
       {/* --- Stylized Director Figure --- */}
       <group position={[0, 0, 0]}>
         {/* Head with Director's Cap */}
@@ -249,11 +249,65 @@ const FilmmakerCharacter = () => {
 };
 
 export const Hero3D = () => {
+  const canvasRef = useRef<HTMLDivElement>(null);
+
+  // Trigger name reveal animation when component mounts
+  useEffect(() => {
+    const timeline = gsap.timeline();
+    
+    // Character entrance animation coordinated with 3D
+    timeline.fromTo(
+      '.filmmaker-character-rig',
+      { opacity: 0, x: -30 },
+      { opacity: 1, x: 0, duration: 1.2, ease: 'power2.out' },
+      0
+    );
+
+    // Staggered name reveal with character sync
+    timeline.fromTo(
+      '.hero-title-word',
+      { opacity: 0, y: 30, scaleX: 0.9 },
+      { opacity: 1, y: 0, scaleX: 1, duration: 0.8, ease: 'back.out(1.2)', stagger: 0.15 },
+      0.4
+    );
+
+    // Subtitle and tagline follow
+    timeline.fromTo(
+      '.hero-subtitle',
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' },
+      0.8
+    );
+
+    timeline.fromTo(
+      '.hero-tagline',
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' },
+      1.0
+    );
+
+    // Fade in description
+    timeline.fromTo(
+      '.hero-description',
+      { opacity: 0, y: 15 },
+      { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' },
+      1.2
+    );
+
+    // Buttons entrance
+    timeline.fromTo(
+      '.hero-cta',
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' },
+      1.4
+    );
+  }, []);
+
   return (
-    <div className="hero-3d-wrapper" aria-hidden="true">
+    <div className="hero-3d-wrapper" aria-hidden="true" ref={canvasRef}>
       <Canvas
         className="hero-3d-canvas"
-        camera={{ position: [0, 1.1, 3.2], fov: 38 }}
+        camera={{ position: [0, 0.85, 2.5], fov: 42 }}
         gl={{
           antialias: true,
           alpha: true,

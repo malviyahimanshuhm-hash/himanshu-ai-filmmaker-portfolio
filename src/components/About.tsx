@@ -9,9 +9,13 @@ export const About = () => {
           <div className="about-image-column">
             <div className="about-image-frame">
               <img
-                src="/images/thumb-herbvia-picking.jpg"
+                src="/images/placeholder-character.jpg"
                 alt="Himanshu Malviya Cinematic AI Direction"
                 className="about-portrait-img"
+                onError={(e) => {
+                  // Fallback to cinematic gradient if image fails
+                  (e.currentTarget as HTMLImageElement).style.display = 'none';
+                }}
               />
               <div className="portrait-cinematic-overlay" aria-hidden="true" />
               <div className="portrait-badge">
