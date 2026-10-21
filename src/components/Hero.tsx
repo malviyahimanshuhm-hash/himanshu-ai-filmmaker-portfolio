@@ -270,8 +270,8 @@ export const Hero = ({ onWatchShowreel }: HeroProps) => {
 
   return (
     <section id="hero" className={`hero ${introStage !== 'revealed' ? 'hero-cinematic-mode' : ''}`} aria-label="Hero Introduction">
-      {/* 3D Canvas Avatar with corrected framing and entrance slide */}
-      <Hero3D isEntered={introStage !== 'prompt'} />
+      {/* 3D Canvas Avatar with corrected framing, entrance slide, and facial morph targets */}
+      <Hero3D isEntered={introStage !== 'prompt'} isSpeaking={introStage === 'speaking'} />
 
       {/* Cinematic Letterbox Bars */}
       <div className={`cinema-letterbox letterbox-top ${introStage === 'revealed' ? 'letterbox-hide' : ''}`} aria-hidden="true" />
