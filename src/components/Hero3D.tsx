@@ -307,7 +307,7 @@ export const Hero3D = () => {
     <div className="hero-3d-wrapper" aria-hidden="true" ref={canvasRef}>
       <Canvas
         className="hero-3d-canvas"
-        camera={{ position: [0, 0.85, 2.5], fov: 42 }}
+        camera={{ position: [0, 0.6, 3.2], fov: 38 }}
         gl={{
           antialias: true,
           alpha: true,
@@ -322,12 +322,12 @@ export const Hero3D = () => {
         }}
       >
         {/* Procedural Cinematic Studio Lighting — Zero external CDN network dependencies */}
-        <ambientLight intensity={0.65} color="#151722" />
+        <ambientLight intensity={1.0} color="#1a1f2e" />
 
         {/* Warm Golden Key Light */}
         <directionalLight
           position={[3.5, 4, 3]}
-          intensity={2.8}
+          intensity={3.5}
           color="#f4c430"
           castShadow
           shadow-mapSize-width={1024}

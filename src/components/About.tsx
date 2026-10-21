@@ -9,7 +9,7 @@ export const About = () => {
           <div className="about-image-column">
             <div className="about-image-frame">
               <img
-                src="/images/placeholder-character.jpg"
+                src="/images/thumb-herbvia-speaking.jpg"
                 alt="Himanshu Malviya Cinematic AI Direction"
                 className="about-portrait-img"
                 onError={(e) => {
